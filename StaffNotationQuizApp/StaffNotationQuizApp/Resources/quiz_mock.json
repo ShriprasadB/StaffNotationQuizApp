@@ -1,0 +1,9 @@
+{
+  "questions": [
+    { "id": "q1", "imageUrl": "https://picsum.photos/seed/treble1/600/300", "correctAnswer": "C" },
+    { "id": "q2", "imageUrl": "https://picsum.photos/seed/treble2/600/300", "correctAnswer": "G" },
+    { "id": "q3", "imageUrl": "https://picsum.photos/seed/bass1/600/300", "correctAnswer": "E" },
+    { "id": "q4", "imageUrl": "https://picsum.photos/seed/bass2/600/300", "correctAnswer": "A" },
+    { "id": "q5", "imageUrl": "https://picsum.photos/seed/treble3/600/300", "correctAnswer": "F" }
+  ]
+}
