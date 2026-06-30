@@ -35,7 +35,7 @@ final class QuizViewModel: ObservableObject {
     private var startTime: Date?
     private(set) var elapsed: TimeInterval = 0
 
-    init(service: QuizService = MockQuizService()) {
+    init(service: QuizService = FirebaseQuizService()) {
         self.service = service
     }
 

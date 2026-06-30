@@ -30,5 +30,10 @@ Carthage/Build/
 fastlane/report.xml
 fastlane/screenshots/
 
-# Firebase config (uncomment if you don't want to commit it)
+# Firebase service-account key — NEVER commit this
+serviceAccount*.json
+*-firebase-adminsdk-*.json
+backend/serviceAccount.json
+
+# GoogleService-Info.plist (safe to commit, but ignore by default)
 # GoogleService-Info.plist

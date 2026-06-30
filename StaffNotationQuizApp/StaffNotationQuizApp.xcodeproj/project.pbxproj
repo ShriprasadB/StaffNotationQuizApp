@@ -22,6 +22,11 @@
 		FE045CFD2FF0B5A30064407A /* quiz_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = FE045CF32FF0B5A30064407A /* quiz_mock.json */; };
 		FE045CFE2FF0B5A30064407A /* QuizService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CF52FF0B5A30064407A /* QuizService.swift */; };
 		FE045CFF2FF0B5A30064407A /* QuizViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CF72FF0B5A30064407A /* QuizViewModel.swift */; };
+		FE2BD9D82FF45E2700982FD7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE2BD9D72FF45E2700982FD7 /* GoogleService-Info.plist */; };
+		FEF600792FF457F6004F1E90 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FEF600782FF457F6004F1E90 /* FirebaseAuth */; };
+		FEF6007B2FF457F6004F1E90 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FEF6007A2FF457F6004F1E90 /* FirebaseFirestore */; };
+		FEF6007D2FF457F6004F1E90 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = FEF6007C2FF457F6004F1E90 /* FirebaseStorage */; };
+		FEF6007F2FF45A16004F1E90 /* FirebaseQuizService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF6007E2FF45A16004F1E90 /* FirebaseQuizService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +65,8 @@
 		FE045CF32FF0B5A30064407A /* quiz_mock.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = quiz_mock.json; sourceTree = "<group>"; };
 		FE045CF52FF0B5A30064407A /* QuizService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizService.swift; sourceTree = "<group>"; };
 		FE045CF72FF0B5A30064407A /* QuizViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizViewModel.swift; sourceTree = "<group>"; };
+		FE2BD9D72FF45E2700982FD7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FEF6007E2FF45A16004F1E90 /* FirebaseQuizService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseQuizService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +74,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEF600792FF457F6004F1E90 /* FirebaseAuth in Frameworks */,
+				FEF6007B2FF457F6004F1E90 /* FirebaseFirestore in Frameworks */,
+				FEF6007D2FF457F6004F1E90 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +128,7 @@
 				FE045CF62FF0B5A30064407A /* ViewModels */,
 				FE045CEE2FF0B5A30064407A /* Views */,
 				FE045CC52FF0AF0F0064407A /* Assets.xcassets */,
+				FE2BD9D72FF45E2700982FD7 /* GoogleService-Info.plist */,
 				FE045CC72FF0AF0F0064407A /* Preview Content */,
 			);
 			path = StaffNotationQuizApp;
@@ -178,6 +189,7 @@
 		FE045CF42FF0B5A30064407A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				FEF6007E2FF45A16004F1E90 /* FirebaseQuizService.swift */,
 				FE045CF52FF0B5A30064407A /* QuizService.swift */,
 			);
 			path = Services;
@@ -207,6 +219,11 @@
 			dependencies = (
 			);
 			name = StaffNotationQuizApp;
+			packageProductDependencies = (
+				FEF600782FF457F6004F1E90 /* FirebaseAuth */,
+				FEF6007A2FF457F6004F1E90 /* FirebaseFirestore */,
+				FEF6007C2FF457F6004F1E90 /* FirebaseStorage */,
+			);
 			productName = StaffNotationQuizApp;
 			productReference = FE045CBE2FF0AF0E0064407A /* StaffNotationQuizApp.app */;
 			productType = "com.apple.product-type.application";
@@ -279,6 +296,9 @@
 				Base,
 			);
 			mainGroup = FE045CB52FF0AF0E0064407A;
+			packageReferences = (
+				FEF600772FF457F6004F1E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = FE045CBF2FF0AF0E0064407A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -296,6 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE045CC92FF0AF0F0064407A /* Preview Assets.xcassets in Resources */,
+				FE2BD9D82FF45E2700982FD7 /* GoogleService-Info.plist in Resources */,
 				FE045CC62FF0AF0F0064407A /* Assets.xcassets in Resources */,
 				FE045CFD2FF0B5A30064407A /* quiz_mock.json in Resources */,
 			);
@@ -323,6 +344,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE045CC42FF0AF0E0064407A /* ContentView.swift in Sources */,
+				FEF6007F2FF45A16004F1E90 /* FirebaseQuizService.swift in Sources */,
 				FE045CFB2FF0B5A30064407A /* ResultsView.swift in Sources */,
 				FE045CC22FF0AF0E0064407A /* StaffNotationQuizAppApp.swift in Sources */,
 				FE045CFF2FF0B5A30064407A /* QuizViewModel.swift in Sources */,
@@ -649,6 +671,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FEF600772FF457F6004F1E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 10.17.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FEF600782FF457F6004F1E90 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEF600772FF457F6004F1E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		FEF6007A2FF457F6004F1E90 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEF600772FF457F6004F1E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		FEF6007C2FF457F6004F1E90 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEF600772FF457F6004F1E90 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FE045CB62FF0AF0E0064407A /* Project object */;
 }
