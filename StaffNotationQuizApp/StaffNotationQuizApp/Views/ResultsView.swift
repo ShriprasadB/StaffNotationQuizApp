@@ -28,7 +28,7 @@ struct ResultsView: View {
 
             HStack(spacing: 14) {
                 statCard(title: "Score",
-                         value: "\(viewModel.score)/\(viewModel.total)",
+                         value: "\(viewModel.score)/\(viewModel.answeredCount)",
                          icon: "star.fill")
                 statCard(title: "Time",
                          value: formattedTime(viewModel.elapsed),

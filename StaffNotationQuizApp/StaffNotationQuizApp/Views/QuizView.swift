@@ -2,9 +2,9 @@
 //  QuizView.swift
 //  StaffNotationQuizApp
 //
-//  Active quiz screen. Adapts between a stacked layout (portrait) and a
-//  side-by-side layout (landscape), reveals the correct/wrong answer, and
-//  fires haptics on each result.
+//  Active quiz screen. Adapts between stacked (portrait) and side-by-side
+//  (landscape) layouts, shows a live timer with pause/end controls, reveals
+//  the correct/wrong answer, and fires haptics on each result.
 //
 
 import SwiftUI
@@ -13,6 +13,7 @@ struct QuizView: View {
     @ObservedObject var viewModel: QuizViewModel
     @Environment(\.verticalSizeClass) private var vSize
     @Environment(\.horizontalSizeClass) private var hSize
+    @State private var showEndConfirm = false
 
     enum AnswerVisual { case idle, correct, wrong, dimmed }
 
@@ -22,24 +23,76 @@ struct QuizView: View {
             ? AnyLayout(HStackLayout(spacing: 28))
             : AnyLayout(VStackLayout(spacing: 20))
 
-        VStack(spacing: 16) {
-            progressHeader
+        ZStack {
+            VStack(spacing: 16) {
+                controlBar
+                progressHeader
 
-            layout {
-                imageCard
-                VStack(spacing: 16) {
-                    feedbackBanner
-                    answerGrid
+                layout {
+                    imageCard
+                    VStack(spacing: 16) {
+                        feedbackBanner
+                        answerGrid
+                    }
                 }
             }
+            .padding(.vertical, 16)
+            .blur(radius: viewModel.isPaused ? 10 : 0)
+            .disabled(viewModel.isPaused)
+
+            if viewModel.isPaused {
+                pauseOverlay.transition(.opacity)
+            }
         }
-        .padding(.vertical, 16)
+        .animation(.easeInOut(duration: 0.25), value: viewModel.isPaused)
         .onChange(of: viewModel.feedback) { fb in
             switch fb {
             case .correct: Haptics.success()
             case .incorrect: Haptics.error()
             case .none: break
             }
+        }
+        .confirmationDialog("End the quiz?", isPresented: $showEndConfirm, titleVisibility: .visible) {
+            Button("End Quiz", role: .destructive) { viewModel.endQuiz() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("You'll see your results so far.")
+        }
+    }
+
+    // MARK: - Control bar (pause • timer • end)
+
+    private var controlBar: some View {
+        HStack {
+            circleButton(icon: "pause.fill") {
+                Haptics.tap()
+                viewModel.pause()
+            }
+
+            Spacer()
+
+            Label(timeString(viewModel.elapsed), systemImage: "clock.fill")
+                .font(.headline.monospacedDigit())
+                .foregroundColor(.white)
+                .padding(.horizontal, 16).padding(.vertical, 8)
+                .background(.white.opacity(0.18), in: Capsule())
+
+            Spacer()
+
+            circleButton(icon: "stop.fill") {
+                Haptics.tap()
+                showEndConfirm = true
+            }
+        }
+    }
+
+    private func circleButton(icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(width: 44, height: 44)
+                .background(.white.opacity(0.18), in: Circle())
         }
     }
 
@@ -67,7 +120,6 @@ struct QuizView: View {
         }
     }
 
-    // Fill the bar including the current (in-progress) question.
     private var progressFraction: Double {
         guard viewModel.total > 0 else { return 0 }
         return Double(viewModel.questionNumber) / Double(viewModel.total)
@@ -109,7 +161,7 @@ struct QuizView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous))
         .shadow(color: .black.opacity(0.2), radius: 14, x: 0, y: 8)
-        .id(viewModel.currentIndex)               // re-create per question
+        .id(viewModel.currentIndex)
         .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                 removal: .opacity))
         .animation(.easeInOut(duration: 0.3), value: viewModel.currentIndex)
@@ -193,5 +245,53 @@ struct QuizView: View {
         case .correct: Theme.correct
         case .wrong: Theme.incorrect
         }
+    }
+
+    // MARK: - Pause overlay
+
+    private var pauseOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.35).ignoresSafeArea()
+
+            VStack(spacing: 22) {
+                Image(systemName: "pause.circle.fill")
+                    .font(.system(size: 64))
+                    .foregroundColor(.white)
+                Text("Paused")
+                    .font(.largeTitle.bold())
+                    .foregroundColor(.white)
+                Label(timeString(viewModel.elapsed), systemImage: "clock.fill")
+                    .font(.title3.monospacedDigit())
+                    .foregroundColor(.white.opacity(0.9))
+
+                VStack(spacing: 12) {
+                    Button {
+                        Haptics.tap()
+                        viewModel.resume()
+                    } label: {
+                        Label("Resume", systemImage: "play.fill")
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+
+                    Button {
+                        viewModel.endQuiz()
+                    } label: {
+                        Text("End Quiz")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                    }
+                }
+                .frame(maxWidth: 360)
+                .padding(.top, 8)
+            }
+            .padding(32)
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func timeString(_ interval: TimeInterval) -> String {
+        let total = Int(interval)
+        return String(format: "%d:%02d", total / 60, total % 60)
     }
 }

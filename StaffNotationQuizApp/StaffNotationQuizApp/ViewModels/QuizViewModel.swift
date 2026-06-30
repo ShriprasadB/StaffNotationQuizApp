@@ -2,8 +2,8 @@
 //  QuizViewModel.swift
 //  StaffNotationQuizApp
 //
-//  Owns all quiz state: the question list, the current index, the running
-//  score, feedback, and timing. The views are thin and just read from here.
+//  Owns all quiz state: the question list, current index, running score,
+//  feedback, a live stopwatch, and pause/resume/end control.
 //
 
 import Foundation
@@ -31,10 +31,16 @@ final class QuizViewModel: ObservableObject {
     @Published private(set) var feedback: Feedback = .none
     @Published private(set) var selectedNote: Note?
     @Published private(set) var score = 0
+    @Published private(set) var answeredCount = 0
+    @Published private(set) var elapsed: TimeInterval = 0
+    @Published private(set) var isPaused = false
 
     private let service: QuizService
-    private var startTime: Date?
-    private(set) var elapsed: TimeInterval = 0
+
+    // Stopwatch: total = accumulated (completed segments) + time since segmentStart.
+    private var timer: Timer?
+    private var segmentStart: Date?
+    private var accumulated: TimeInterval = 0
 
     init(service: QuizService = FirebaseQuizService()) {
         self.service = service
@@ -52,77 +58,137 @@ final class QuizViewModel: ObservableObject {
     /// 1-based position for display, e.g. "Question 3 of 34".
     var questionNumber: Int { currentIndex + 1 }
 
-    /// 0...1 progress through the quiz, for the progress bar.
-    var progress: Double {
-        guard total > 0 else { return 0 }
-        return Double(currentIndex) / Double(total)
-    }
-
+    /// Accuracy over the questions actually answered (so ending early is fair).
     var accuracy: Double {
-        guard total > 0 else { return 0 }
-        return (Double(score) / Double(total)) * 100
+        guard answeredCount > 0 else { return 0 }
+        return (Double(score) / Double(answeredCount)) * 100
     }
 
-    // MARK: - Actions
+    // MARK: - Lifecycle
 
     func startQuiz() async {
+        stopTimer()
         phase = .loading
         feedback = .none
         selectedNote = nil
         score = 0
+        answeredCount = 0
         currentIndex = 0
+        accumulated = 0
+        elapsed = 0
+        isPaused = false
         do {
             let fetched = try await service.fetchQuestions()
             guard !fetched.isEmpty else {
                 phase = .error("No questions were returned.")
                 return
             }
-            questions = fetched
-            startTime = Date()
+            questions = fetched          // already shuffled by the service
             phase = .active
+            startTimer()
         } catch {
             phase = .error(error.localizedDescription)
         }
     }
 
-    /// Handle a tapped answer. Ignored while feedback is showing so the user
-    /// can't double-answer the same question.
-    func select(_ note: Note) {
-        guard feedback == .none, let question = currentQuestion else { return }
-
-        let isCorrect = note == question.correctAnswer
-        selectedNote = note
-        feedback = isCorrect ? .correct : .incorrect
-        if isCorrect { score += 1 }
-
-        Task {
-            // Linger a touch longer so the reveal (correct/wrong) is visible.
-            try? await Task.sleep(nanoseconds: 1_100_000_000) // 1.1s
-            advance()
-        }
-    }
-
     func reset() {
+        stopTimer()
         phase = .idle
         questions = []
         currentIndex = 0
         feedback = .none
         selectedNote = nil
         score = 0
-        startTime = nil
+        answeredCount = 0
+        accumulated = 0
         elapsed = 0
+        isPaused = false
+    }
+
+    // MARK: - Answering
+
+    /// Handle a tapped answer. Ignored while feedback shows or while paused.
+    func select(_ note: Note) {
+        guard feedback == .none, !isPaused, let question = currentQuestion else { return }
+
+        let isCorrect = note == question.correctAnswer
+        selectedNote = note
+        feedback = isCorrect ? .correct : .incorrect
+        answeredCount += 1
+        if isCorrect { score += 1 }
+
+        Task {
+            try? await Task.sleep(nanoseconds: 1_100_000_000) // 1.1s
+            advance()
+        }
+    }
+
+    // MARK: - Pause / resume / end
+
+    func pause() {
+        guard !isPaused, segmentStart != nil else { return }
+        accumulateSegment()
+        stopTimer()
+        isPaused = true
+    }
+
+    func resume() {
+        guard isPaused else { return }
+        isPaused = false
+        startTimer()
+    }
+
+    /// End the quiz immediately and show results with progress so far.
+    func endQuiz() {
+        finalize()
     }
 
     // MARK: - Internal
 
     private func advance() {
+        guard !isPaused else { return }   // don't move on behind the pause screen
         feedback = .none
         selectedNote = nil
         if currentIndex + 1 < questions.count {
             currentIndex += 1
         } else {
-            elapsed = Date().timeIntervalSince(startTime ?? Date())
-            phase = .finished
+            finalize()
         }
+    }
+
+    private func finalize() {
+        if !isPaused { accumulateSegment() }
+        stopTimer()
+        elapsed = accumulated
+        feedback = .none
+        selectedNote = nil
+        isPaused = false
+        phase = .finished
+    }
+
+    // MARK: - Stopwatch
+
+    private func startTimer() {
+        stopTimer()
+        segmentStart = Date()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            self?.tick()
+        }
+    }
+
+    private func tick() {
+        guard let start = segmentStart else { return }
+        elapsed = accumulated + Date().timeIntervalSince(start)
+    }
+
+    private func accumulateSegment() {
+        guard let start = segmentStart else { return }
+        accumulated += Date().timeIntervalSince(start)
+        segmentStart = nil
+    }
+
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
