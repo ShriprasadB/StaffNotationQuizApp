@@ -27,6 +27,7 @@
 		FEF6007B2FF457F6004F1E90 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FEF6007A2FF457F6004F1E90 /* FirebaseFirestore */; };
 		FEF6007D2FF457F6004F1E90 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = FEF6007C2FF457F6004F1E90 /* FirebaseStorage */; };
 		FEF6007F2FF45A16004F1E90 /* FirebaseQuizService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF6007E2FF45A16004F1E90 /* FirebaseQuizService.swift */; };
+		FE7E11112FF45A16004F1E90 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7E11102FF45A16004F1E90 /* Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		FE045CF72FF0B5A30064407A /* QuizViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizViewModel.swift; sourceTree = "<group>"; };
 		FE2BD9D72FF45E2700982FD7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FEF6007E2FF45A16004F1E90 /* FirebaseQuizService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseQuizService.swift; sourceTree = "<group>"; };
+		FE7E11102FF45A16004F1E90 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 			children = (
 				FE045CC12FF0AF0E0064407A /* StaffNotationQuizAppApp.swift */,
 				FE045CC32FF0AF0E0064407A /* ContentView.swift */,
+				FE7E11102FF45A16004F1E90 /* Theme.swift */,
 				FE045CEB2FF0B5A30064407A /* Models */,
 				FE045CF22FF0B5A30064407A /* Resources */,
 				FE045CF42FF0B5A30064407A /* Services */,
@@ -345,6 +348,7 @@
 			files = (
 				FE045CC42FF0AF0E0064407A /* ContentView.swift in Sources */,
 				FEF6007F2FF45A16004F1E90 /* FirebaseQuizService.swift in Sources */,
+				FE7E11112FF45A16004F1E90 /* Theme.swift in Sources */,
 				FE045CFB2FF0B5A30064407A /* ResultsView.swift in Sources */,
 				FE045CC22FF0AF0E0064407A /* StaffNotationQuizAppApp.swift in Sources */,
 				FE045CFF2FF0B5A30064407A /* QuizViewModel.swift in Sources */,

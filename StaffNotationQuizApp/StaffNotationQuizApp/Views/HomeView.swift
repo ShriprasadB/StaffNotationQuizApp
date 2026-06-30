@@ -2,53 +2,66 @@
 //  HomeView.swift
 //  StaffNotationQuizApp
 //
-//  The single MVP home screen: a title and a Start Quiz button.
+//  Landing screen: animated hero + Start button, on the brand gradient.
 //
 
 import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var viewModel: QuizViewModel
+    @State private var pulse = false
 
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: 28) {
             Spacer()
 
-            Image(systemName: "music.note")
-                .font(.system(size: 64))
-                .foregroundColor(.accentColor)
+            ZStack {
+                Circle()
+                    .fill(.white.opacity(0.15))
+                    .frame(width: 160, height: 160)
+                    .scaleEffect(pulse ? 1.08 : 0.92)
+                Image(systemName: "music.note")
+                    .font(.system(size: 70, weight: .bold))
+                    .foregroundColor(.white)
+            }
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
+                    pulse = true
+                }
+            }
 
-            VStack(spacing: 8) {
+            VStack(spacing: 10) {
                 Text("Staff Notation Quiz")
-                    .font(.largeTitle).bold()
-                Text("Identify the note on the staff.")
+                    .font(.largeTitle.bold())
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                Text("Read the note on the staff and pick the right letter.")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.white.opacity(0.85))
+                    .multilineTextAlignment(.center)
             }
 
             if case .error(let message) = viewModel.phase {
-                Text(message)
+                Label(message, systemImage: "exclamationmark.triangle.fill")
                     .font(.footnote)
-                    .foregroundColor(.red)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Theme.incorrect.opacity(0.9), in: RoundedRectangle(cornerRadius: 12))
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
             }
 
             Spacer()
 
             Button {
+                Haptics.tap()
                 Task { await viewModel.startQuiz() }
             } label: {
-                Text("Start Quiz")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.accentColor)
-                    .foregroundColor(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                Label("Start Quiz", systemImage: "play.fill")
             }
-            .padding(.horizontal)
-            .padding(.bottom, 24)
+            .buttonStyle(PrimaryButtonStyle())
+            .padding(.bottom, 12)
         }
+        .frame(maxWidth: 480)
+        .padding(.vertical, 24)
     }
 }

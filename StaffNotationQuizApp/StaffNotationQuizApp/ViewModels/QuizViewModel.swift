@@ -29,6 +29,7 @@ final class QuizViewModel: ObservableObject {
     @Published private(set) var questions: [QuizQuestion] = []
     @Published private(set) var currentIndex = 0
     @Published private(set) var feedback: Feedback = .none
+    @Published private(set) var selectedNote: Note?
     @Published private(set) var score = 0
 
     private let service: QuizService
@@ -51,6 +52,12 @@ final class QuizViewModel: ObservableObject {
     /// 1-based position for display, e.g. "Question 3 of 34".
     var questionNumber: Int { currentIndex + 1 }
 
+    /// 0...1 progress through the quiz, for the progress bar.
+    var progress: Double {
+        guard total > 0 else { return 0 }
+        return Double(currentIndex) / Double(total)
+    }
+
     var accuracy: Double {
         guard total > 0 else { return 0 }
         return (Double(score) / Double(total)) * 100
@@ -61,6 +68,7 @@ final class QuizViewModel: ObservableObject {
     func startQuiz() async {
         phase = .loading
         feedback = .none
+        selectedNote = nil
         score = 0
         currentIndex = 0
         do {
@@ -83,11 +91,13 @@ final class QuizViewModel: ObservableObject {
         guard feedback == .none, let question = currentQuestion else { return }
 
         let isCorrect = note == question.correctAnswer
+        selectedNote = note
         feedback = isCorrect ? .correct : .incorrect
         if isCorrect { score += 1 }
 
         Task {
-            try? await Task.sleep(nanoseconds: 800_000_000) // 0.8s
+            // Linger a touch longer so the reveal (correct/wrong) is visible.
+            try? await Task.sleep(nanoseconds: 1_100_000_000) // 1.1s
             advance()
         }
     }
@@ -97,6 +107,7 @@ final class QuizViewModel: ObservableObject {
         questions = []
         currentIndex = 0
         feedback = .none
+        selectedNote = nil
         score = 0
         startTime = nil
         elapsed = 0
@@ -106,6 +117,7 @@ final class QuizViewModel: ObservableObject {
 
     private func advance() {
         feedback = .none
+        selectedNote = nil
         if currentIndex + 1 < questions.count {
             currentIndex += 1
         } else {

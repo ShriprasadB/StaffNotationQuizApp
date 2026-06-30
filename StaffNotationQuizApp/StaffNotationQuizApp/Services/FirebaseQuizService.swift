@@ -24,7 +24,8 @@ final class FirebaseQuizService: QuizService {
                 let answer = Note(rawValue: answerRaw)
             else { return nil }
 
-            return QuizQuestion(id: doc.documentID, imageUrl: imageUrl, correctAnswer: answer)
+            let clef = data["clef"] as? String
+            return QuizQuestion(id: doc.documentID, imageUrl: imageUrl, correctAnswer: answer, clef: clef)
         }
 
         // Randomize order each run; each question appears once.

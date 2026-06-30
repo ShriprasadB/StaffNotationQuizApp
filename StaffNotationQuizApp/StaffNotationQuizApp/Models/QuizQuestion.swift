@@ -12,6 +12,7 @@ struct QuizQuestion: Identifiable, Codable {
     let id: String
     let imageUrl: String
     let correctAnswer: Note
+    let clef: String?          // "treble" | "bass" — for a caption; optional
 }
 
 /// Top-level wrapper matching the API response shape.
