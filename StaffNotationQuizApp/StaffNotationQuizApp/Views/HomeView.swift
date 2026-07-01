@@ -35,7 +35,7 @@ struct HomeView: View {
                     .font(.largeTitle.bold())
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
-                Text("Read the note on the staff and pick the right letter.")
+                Text("Pick a quiz, then name the notes.")
                     .font(.subheadline)
                     .foregroundColor(.white.opacity(0.85))
                     .multilineTextAlignment(.center)
@@ -52,16 +52,44 @@ struct HomeView: View {
 
             Spacer()
 
-            Button {
-                Haptics.tap()
-                Task { await viewModel.startQuiz() }
-            } label: {
-                Label("Start Quiz", systemImage: "play.fill")
+            VStack(spacing: 14) {
+                ForEach(QuizMode.allCases) { mode in
+                    modeButton(mode)
+                }
             }
-            .buttonStyle(PrimaryButtonStyle())
             .padding(.bottom, 12)
         }
         .frame(maxWidth: 480)
         .padding(.vertical, 24)
+    }
+
+    private func modeButton(_ mode: QuizMode) -> some View {
+        Button {
+            Haptics.tap()
+            Task { await viewModel.startQuiz(mode: mode) }
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: mode.icon)
+                    .font(.title2)
+                    .frame(width: 48, height: 48)
+                    .background(Theme.primary.opacity(0.15), in: Circle())
+                    .foregroundColor(Theme.primaryDark)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(mode.title).font(.headline)
+                    Text(mode.subtitle).font(.caption).foregroundColor(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.secondary)
+            }
+            .foregroundColor(Theme.primaryDark)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 6)
+        }
     }
 }

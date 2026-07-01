@@ -40,7 +40,7 @@ struct ResultsView: View {
             VStack(spacing: 12) {
                 Button {
                     Haptics.tap()
-                    Task { await viewModel.startQuiz() }
+                    Task { await viewModel.startQuiz(mode: viewModel.mode) }
                 } label: {
                     Label("Play Again", systemImage: "arrow.clockwise")
                 }

@@ -16,6 +16,7 @@
 		FE045CDF2FF0AF0F0064407A /* StaffNotationQuizAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CDE2FF0AF0F0064407A /* StaffNotationQuizAppUITestsLaunchTests.swift */; };
 		FE045CF82FF0B5A30064407A /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CEC2FF0B5A30064407A /* Note.swift */; };
 		FE045CF92FF0B5A30064407A /* QuizQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CED2FF0B5A30064407A /* QuizQuestion.swift */; };
+		FEC0DE0100000000000000B1 /* QuizMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC0DE0100000000000000B2 /* QuizMode.swift */; };
 		FE045CFA2FF0B5A30064407A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CEF2FF0B5A30064407A /* HomeView.swift */; };
 		FE045CFB2FF0B5A30064407A /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CF02FF0B5A30064407A /* ResultsView.swift */; };
 		FE045CFC2FF0B5A30064407A /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE045CF12FF0B5A30064407A /* QuizView.swift */; };
@@ -61,6 +62,7 @@
 		FE045CDE2FF0AF0F0064407A /* StaffNotationQuizAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffNotationQuizAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		FE045CEC2FF0B5A30064407A /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		FE045CED2FF0B5A30064407A /* QuizQuestion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizQuestion.swift; sourceTree = "<group>"; };
+		FEC0DE0100000000000000B2 /* QuizMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizMode.swift; sourceTree = "<group>"; };
 		FE045CEF2FF0B5A30064407A /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		FE045CF02FF0B5A30064407A /* ResultsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		FE045CF12FF0B5A30064407A /* QuizView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 			children = (
 				FE045CEC2FF0B5A30064407A /* Note.swift */,
 				FE045CED2FF0B5A30064407A /* QuizQuestion.swift */,
+				FEC0DE0100000000000000B2 /* QuizMode.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 				FE045CC22FF0AF0E0064407A /* StaffNotationQuizAppApp.swift in Sources */,
 				FE045CFF2FF0B5A30064407A /* QuizViewModel.swift in Sources */,
 				FE045CF92FF0B5A30064407A /* QuizQuestion.swift in Sources */,
+				FEC0DE0100000000000000B1 /* QuizMode.swift in Sources */,
 				FE045CFC2FF0B5A30064407A /* QuizView.swift in Sources */,
 				FE045CFA2FF0B5A30064407A /* HomeView.swift in Sources */,
 				FE045CFE2FF0B5A30064407A /* QuizService.swift in Sources */,

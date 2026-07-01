@@ -34,6 +34,7 @@ final class QuizViewModel: ObservableObject {
     @Published private(set) var answeredCount = 0
     @Published private(set) var elapsed: TimeInterval = 0
     @Published private(set) var isPaused = false
+    @Published private(set) var mode: QuizMode = .notation
 
     private let service: QuizService
 
@@ -66,7 +67,8 @@ final class QuizViewModel: ObservableObject {
 
     // MARK: - Lifecycle
 
-    func startQuiz() async {
+    func startQuiz(mode: QuizMode = .notation) async {
+        self.mode = mode
         stopTimer()
         phase = .loading
         feedback = .none
