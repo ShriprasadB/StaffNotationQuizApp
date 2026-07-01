@@ -13,6 +13,7 @@ struct QuizView: View {
     @ObservedObject var viewModel: QuizViewModel
     @Environment(\.verticalSizeClass) private var vSize
     @Environment(\.horizontalSizeClass) private var hSize
+    @AppStorage("soundEnabled") private var soundEnabled = true
     @State private var showEndConfirm = false
 
     enum AnswerVisual { case idle, correct, wrong, dimmed }
@@ -45,6 +46,8 @@ struct QuizView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: viewModel.isPaused)
+        .onAppear { playCurrentNote() }
+        .onChange(of: viewModel.currentIndex) { _ in playCurrentNote() }
         .onChange(of: viewModel.feedback) { fb in
             switch fb {
             case .correct: Haptics.success()
@@ -79,11 +82,23 @@ struct QuizView: View {
 
             Spacer()
 
+            circleButton(icon: soundEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill") {
+                Haptics.tap()
+                soundEnabled.toggle()
+                if soundEnabled { playCurrentNote() }   // preview on enable
+            }
+
             circleButton(icon: "stop.fill") {
                 Haptics.tap()
                 showEndConfirm = true
             }
         }
+    }
+
+    /// Play the pitch of the note currently on screen, if sound is on.
+    private func playCurrentNote() {
+        guard soundEnabled, let question = viewModel.currentQuestion else { return }
+        NotePlayer.shared.play(frequency: question.frequency)
     }
 
     private func circleButton(icon: String, action: @escaping () -> Void) -> some View {
@@ -165,6 +180,8 @@ struct QuizView: View {
         .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                 removal: .opacity))
         .animation(.easeInOut(duration: 0.3), value: viewModel.currentIndex)
+        .contentShape(Rectangle())
+        .onTapGesture { playCurrentNote() }   // tap the notation to hear it again
     }
 
     // MARK: - Feedback
